@@ -1,1 +1,1 @@
-# react-capstone-project
+# react-capstone-course
