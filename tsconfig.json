@@ -1,0 +1,43 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"strict": true,
+		"allowJs": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noImplicitAny": true,
+		"noEmit": true,
+		"module": "esnext",
+		"jsx": "preserve",
+		"incremental": true,
+		"baseUrl": ".",
+		"paths": {
+			"@features/*": [
+				"src/features/HeadTags/*",
+				"src/features/ColorSchemeToggle/*",
+				"src/features/LanguageSelector/*",
+				"src/features/AppScaffold/*"
+			],
+			"@context/*": ["./src/context/*"],
+			"@hooks/*": ["./src/hooks/*"],
+			"@pages/*": ["./src/pages/*"],
+			"@server/*": ["./src/server/*"],
+			"@styles/*": ["./src/styles/*"],
+			"@utils/*": ["./src/utils/*"]
+		}
+	},
+	"include": [
+		"next-env.d.ts", 
+		"**/*.ts", 
+		"**/*.tsx"
+	],
+	"exclude": [
+		"node_modules"
+	]
+}
