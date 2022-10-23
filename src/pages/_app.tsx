@@ -1,13 +1,12 @@
 import { Fragment, useState } from 'react';
 import { appWithTranslation } from 'next-i18next';
-import { MantineThemeOverride } from '@mantine/core';
-import { ColorSchemeProvider } from '@mantine/core'; 
-import { MantineProvider } from '@mantine/core';
-import { ColorScheme } from '@mantine/core';
+import { MantineProvider, MantineThemeOverride } from '@mantine/core';
+import { ColorScheme, ColorSchemeProvider } from '@mantine/core'; 
+import { ModalsProvider } from '@mantine/modals';
 import { AppProps } from 'next/app';
 import siteConfig from 'site.config';
 import HeadTags from '@features/HeadTags';
-import AppScaffold from 'src/features/AppScaffold/AppScaffold';
+import AppScaffold from '@features/AppScaffold';
 import * as cookies from '@utils/cookies';
 
 interface CustomPageProps {
@@ -31,9 +30,11 @@ function App({ Component, pageProps }: AppProps): JSX.Element {
 			<HeadTags />
 			<ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggle}>
 				<MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
-					<AppScaffold>
-						<Component {...pageProps}/>
-					</AppScaffold>
+					<ModalsProvider>
+						<AppScaffold>
+							<Component {...pageProps}/>
+						</AppScaffold>
+					</ModalsProvider>
 				</MantineProvider>
 			</ColorSchemeProvider>
 		</Fragment>

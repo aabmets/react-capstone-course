@@ -1,10 +1,10 @@
+import React from 'react';
 import { NextPageContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import getRequestAttributes from '@server/getRequestAttributes';
 import ColorSchemeToggle from 'src/features/ColorSchemeToggle/ColorSchemeToggle';
 import LanguageSelector from 'src/features/LanguageSelector/LanguageSelector';
-
 
 function MainPage() {
 	const { t } = useTranslation('common');
@@ -14,6 +14,7 @@ function MainPage() {
 			{t("debug.translations.locale")}
 			<ColorSchemeToggle />
 			<LanguageSelector />
+			<div></div>
 		</div>
 	)
 }
