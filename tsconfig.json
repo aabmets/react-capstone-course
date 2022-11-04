@@ -1,7 +1,11 @@
 {
 	"compilerOptions": {
 		"target": "ESNext",
-		"lib": ["dom", "dom.iterable", "esnext"],
+		"lib": [
+			"dom",
+			"dom.iterable",
+			"esnext"
+		],
 		"strict": true,
 		"allowJs": true,
 		"skipLibCheck": true,
@@ -18,24 +22,31 @@
 		"incremental": true,
 		"baseUrl": ".",
 		"paths": {
-			"@features/*": [
-				"src/features/HeadTags/*",
-				"src/features/ColorSchemeToggle/*",
-				"src/features/LanguageSelector/*",
-				"src/features/AppScaffold/*"
-			],
-			"@context/*": ["./src/context/*"],
-			"@hooks/*": ["./src/hooks/*"],
-			"@pages/*": ["./src/pages/*"],
-			"@server/*": ["./src/server/*"],
-			"@styles/*": ["./src/styles/*"],
-			"@utils/*": ["./src/utils/*"]
-		}
+			// common namespace
+			"@components": ["src/common/components"],
+			"@server": ["src/common/server"],
+			"@styles": ["src/common/styles"],
+			"@utils": ["src/common/utils"],
+
+			// simple modules
+			"@app-scaffold": ["src/modules/app-scaffold/exports"],
+			"@appwrite": ["src/modules/appwrite/exports"],
+			"@head-tags": ["src/modules/head-tags/exports"],
+
+			// complex modules
+			"@auth/*": ["src/modules/auth/*"],
+		},
+		"plugins": [
+			{
+				"name": "next"
+			}
+		]
 	},
 	"include": [
-		"next-env.d.ts", 
-		"**/*.ts", 
-		"**/*.tsx"
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		".next/types/**/*.ts"
 	],
 	"exclude": [
 		"node_modules"
