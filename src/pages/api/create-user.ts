@@ -4,7 +4,6 @@ import { EmailState, PasswordState, TermsState } from '@auth/state';
 
 interface ExtendedRequest extends NextApiRequest {
 	body: {
-		[key: string]: any;
 		email?: EmailState;
 		password?: PasswordState;
 		terms?: TermsState;
@@ -17,7 +16,7 @@ async function createUser(req: ExtendedRequest, res: NextApiResponse): Promise<v
 		return;
 	}
 	if (true) {
-		const data = { message: 'OK', username: '', password: ''}
+		const data = { message: 'OK', username: 'mattias@aabmets.ee', password: 'Vrys7rgpswrd'}
 		res.status(200).json(data);
 		return;
 	}

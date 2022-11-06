@@ -1,10 +1,12 @@
-import React, { Fragment } from 'react';
-import axios, { AxiosResponse } from "axios";
+import React from 'react';
+import axios from 'axios';
+import { all } from 'itertools';
+import { Fragment } from 'react';
+import { AxiosResponse } from "axios";
 import { useTranslation } from 'next-i18next';
 import { LoadingOverlay } from '@mantine/core';
 import { Box, Space, Group } from '@mantine/core';
 import { BorderedButton, RedButton } from '@components';
-import { useStageStyles } from  '../RegisterForm.styles';
 import PasswordField from '../fields/PasswordField';
 import EmailField from '../fields/EmailField';
 import TermsField from '../fields/TermsField';
@@ -26,48 +28,67 @@ interface Props {
 	modal: ModalState;
 }
 
-export function InputStage({ modal }: Props): JSX.Element {
+function InputStage({ modal }: Props): JSX.Element {
 	const { form, email, password, terms } = ctx.useFormDataContext();
-	const { classes } = useStageStyles();
 	const { t } = useTranslation('auth');
-	const { setFailed, setSuccess } = form;
+	const { auth } = siteConfig;
 
 	const overlayProps = props.useLoadingOverlayProps();
-	const validateForm = hooks.useFormValidatorEffect();
+	const validateForm = hooks.useFormValidator();
 
 	function submitHandler(): void {
 		if (validateForm()) {
 			modal.setBusy(true);
 			setTimeout(() => {
-				const data = { email, password, terms };
-				axios.post('/api/create-user', data)
+				const request = {
+					url: '/api/create-user',
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					timeout: auth.formSubmitTimeoutMsec,
+					data: { email, password, terms },
+				}
+				axios(request)
 					.then((res: ServerResponse) => {
-						const failed = [
-							res.data.message === 'OK',
-							res.data.username === email.value,
-							res.data.password === password.value,
-						].includes(false);
-						(failed ? setFailed : setSuccess)();
+						if (res.status === 200) {
+							const conditions = all([
+								res.data.message === 'OK',
+								res.data.username === email.value,
+								res.data.password === password.value,
+							]);
+							if (conditions) {
+								form.setSuccess()
+							} else {
+								form.setFailed()
+							}
+						} else {
+							form.setFailed()
+						}
 					})
-					.catch(setFailed)
-					.finally(() => modal.setBusy(false));
-			}, siteConfig.auth.submit_delay_ms);
+					.catch(() => {
+						form.setFailed();
+					})
+					.finally(() => {
+						modal.setBusy(false);
+						// modal.closeModal();
+						
+					});
+			}, auth.formSubmitDelayMsec);
 		}
 	}
 	
 	return (
 		<Fragment>
 			<LoadingOverlay {...overlayProps} visible={modal.busy}/>
-			<Box className={classes.box}>
+			<Box sx={{ width:'100%', height:240 }}>
 				<EmailField/>
-				<Space sx={{height: '5px'}}/>
+				<Space h={5}/>
 				<PasswordField/>
-				<Space sx={{height: '15px'}}/>
+				<Space h={15}/>
 				<TermsField/>
 			</Box>
 			<Group position='apart'>
-				<BorderedButton disabled={modal.busy} onClick={modal.closeModal}>
-					{t("auth.button.cancel")}
+				<BorderedButton disabled={modal.busy} onClick={modal.close}>
+					{t("auth.button.back")}
 				</BorderedButton>
 				<RedButton disabled={modal.busy} onClick={submitHandler}>
 					{t("auth.button.submit")}
@@ -76,3 +97,5 @@ export function InputStage({ modal }: Props): JSX.Element {
 		</Fragment>
 	);
 }
+
+export default InputStage;

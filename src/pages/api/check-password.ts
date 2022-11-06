@@ -4,7 +4,6 @@ import { getPasswordScore } from '@server';
 
 interface ExtendedRequest extends NextApiRequest {
 	body: {
-		[key: string]: any;
 		password?: string;
 		email?: string;
 	}

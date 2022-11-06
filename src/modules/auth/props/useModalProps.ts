@@ -18,6 +18,7 @@ function useModalProps(): ModalProps {
 		transition: 'pop',
 		transitionDuration: 200,
 		closeOnClickOutside: false,
+		closeOnEscape: true,
 		centered: true,
 	} as ModalProps;
 }

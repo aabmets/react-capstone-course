@@ -3,7 +3,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 interface ExtendedRequest extends NextApiRequest {
 	body: {
-		[key: string]: any;
 		email?: string;
 	}
 }
@@ -15,7 +14,6 @@ async function checkEmail(req: ExtendedRequest, res: NextApiResponse): Promise<v
 	}
 
 	if (true) {
-		console.log('CHECKING EMAIL')
 		const available = true;
 		res.status(200).json({ available });
 		return;

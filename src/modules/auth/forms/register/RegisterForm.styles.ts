@@ -1,4 +1,5 @@
 import { createStyles} from "@mantine/core";
+import siteConfig from 'site.config';
 
 
 export const useModalStyles = createStyles((_, { form }: any) => {
@@ -9,16 +10,47 @@ export const useModalStyles = createStyles((_, { form }: any) => {
 				opacity: Number(enabled), 
 				transform: enabled ? '' : 'scale(0)',
 			},
+			'.mantine-Modal-title': {
+				display: 'flex',
+				justifyContent: 'space-between',
+				width: '100%',
+			},
 		},
-		
-	}
+	};
 });
 
-export const useStageStyles = createStyles(() => {
+export const useHeaderStyles = createStyles(() => {
+	const orange = siteConfig.theme.colors.orange[5];
 	return {
-		box: { 
-			width:'100%', 
-			height:240,
+		headerTitle: {
+			fontSize: '1rem',
 		},
+		hoverCard_icon: {
+			color: orange,
+			height: '1rem',
+			width: 'auto',
+			transform: 'translateY(4px) scale(1.5)',
+		},
+		hoverCard_dropdown: {
+			borderWidth: '2.5px',
+			borderColor: orange,
+			transform: 'translateX(20px)',
+			'.mantine-HoverCard-arrow': {
+				borderWidth: '2.5px',
+				borderColor: orange,
+			},
+		},
+		hoverCard_title: {
+			color: orange, 
+			fontSize: '0.9rem', 
+			fontFamily: 'Verdana', 
+			fontWeight: 800,
+			textAlign: 'center',
+		},
+		hoverCard_message: {
+			fontSize: '0.7rem', 
+			fontFamily: 'Verdana',
+			textAlign: 'left',
+		}
 	};
 });

@@ -17,7 +17,7 @@ function RegisterButton() {
 				<RegisterForm modal={modal}/>
 			</FormDataProvider>
   
-			<RedButton onClick={modal.openModal}>
+			<RedButton onClick={modal.open}>
 				{t('auth.button.register')}
 			</RedButton>
 	  	</Fragment>

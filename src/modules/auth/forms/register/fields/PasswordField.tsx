@@ -15,20 +15,19 @@ export function PasswordField(): JSX.Element {
 	const { classes } = useStyles({ password });
 	const { t } = useTranslation('auth');
 	
-	const { token } = hooks.useCheckPasswordEffect();
+	const token = hooks.usePasswordValidator();
 
 	function eventHandler(event: ChangeEvent<HTMLInputElement>) {
-		const max_len = siteConfig.auth.max_password_length;
+		const maxLen = siteConfig.auth.maxPasswordLength;
 		const value = event.target.value;
 
-		if (value.length > max_len) {
+		if (value.length > maxLen) {
 			const msg = t('auth.password-input.error.too-long');
-			password.setError(msg.replace('$', String(max_len)));
-			password.setValue('');
-		} else {
+			password.setError(msg.replace('$', String(maxLen)));
+		} else if (password.isError()) {
 			password.clearError();
-			password.setValue(value);
-		}
+		} 
+		password.setValue(value);
 	}
 	
 	return (

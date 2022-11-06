@@ -32,11 +32,13 @@ const siteConfig = {
 		white: '#fffefa',
 	},
 	auth: {
-		max_email_length: 25,
-		max_password_length: 25,
-		email_debounce_ms: 500,
-		password_debounce_ms: 500,
-		submit_delay_ms: 500,
+		maxEmailLength: 25,
+		maxPasswordLength: 25,
+		emailDebounceMsec: 500,
+		passwordDebounceMsec: 500,
+		formSubmitDelayMsec: 500,
+		formSubmitTimeoutMsec: 10000,
+		maxLatencyMsec: 1000,
 	},
 	other: {
 		nav_progress_size: 4,

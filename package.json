@@ -37,6 +37,7 @@
 		"email-validator": "^2.0.4",
 		"embla-carousel-react": "^7.0.3",
 		"itertools": "^1.7.1",
+		"lottie-react": "^2.3.1",
 		"next": "^13.0.0",
 		"next-i18next": "^12.1.0",
 		"node-appwrite": "^8.1.0",

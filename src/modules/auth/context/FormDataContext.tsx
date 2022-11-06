@@ -1,29 +1,38 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* warning disabled for special case of useEffect */
+
 import React from 'react';
-import { FormState, useFormState } from '../state';
-import { EmailState, useEmailState } from '../state';
-import { PasswordState, usePasswordState } from '../state';
-import { TermsState, useTermsState } from '../state';
+import { useRef, useEffect } from 'react';
+import * as state from '../state';
 
 
 interface FormDataStore {
-	form: FormState; 
-	email: EmailState;
-	password: PasswordState;
-	terms: TermsState;
+	form: state.FormState; 
+	email: state.EmailState;
+	password: state.PasswordState;
+	terms: state.TermsState;
+	network: state.NetworkState;
 }
 
-type Props = { children?: JSX.Element | JSX.Element[] };
 type Context = FormDataStore | undefined;
 
 export const FormDataContext = React.createContext<Context>(undefined);
 
-export function FormDataProvider({ children }: Props): JSX.Element {
+export function FormDataProvider({ children }: any): JSX.Element {
+	const keyRef = useRef(children.props.modal.key as number);
+
+	useEffect(() => {
+		store.network.testLatency();
+	}, [keyRef]);
+
 	const store: FormDataStore = {
-		form: useFormState(),
-		email: useEmailState(),
-		password: usePasswordState(),
-		terms: useTermsState(),
+		form: state.useFormState(),
+		email: state.useEmailState(),
+		password: state.usePasswordState(),
+		terms: state.useTermsState(),
+		network: state.useNetworkState(),
 	}
+	
 	return (
 		<FormDataContext.Provider value={store}>
 			{children}

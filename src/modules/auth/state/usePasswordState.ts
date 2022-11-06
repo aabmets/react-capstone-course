@@ -20,7 +20,7 @@ export interface PasswordState {
 }
 
 export function usePasswordState(): PasswordState {
-	const debounce = siteConfig.auth.password_debounce_ms;
+	const debounce = siteConfig.auth.passwordDebounceMsec;
 	const [value, setValue] = useDebouncedState('', debounce);
 	const [score, setScore] = useState(-1);
 	const [error, setError] = useState('');

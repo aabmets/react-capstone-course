@@ -18,7 +18,7 @@ export interface EmailState {
 }
 
 export function useEmailState(): EmailState {
-	const debounce = siteConfig.auth.email_debounce_ms;
+	const debounce = siteConfig.auth.emailDebounceMsec;
 	const [value, setValue] = useDebouncedState('', debounce);
 	const [error, setError] = useState('');
 	

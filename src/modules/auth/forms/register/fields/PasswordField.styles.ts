@@ -1,7 +1,8 @@
 import { createStyles } from '@mantine/core';
-import { theme } from '@utils';
 import { buttonStyles } from '@styles';
 import { PasswordState } from '@auth/state';
+import { PasswordScore } from '@auth/hooks';
+import { theme } from '@utils';
 
 
 interface Params {
@@ -12,8 +13,8 @@ const useStyles = createStyles((currentTheme, { password }: Params) => {
 	const { colors, colorScheme } = currentTheme;
 	const { lightStyle, darkStyle } = buttonStyles;
 	
-	const borderColor: string = (colorScheme === 'light' ? 
-		lightStyle : darkStyle).borderColor;
+	const borderColor: string = password.isError() ? colors.red[7] : 
+		(colorScheme === 'light' ? lightStyle : darkStyle).borderColor;
 
 	const filter: string = (colorScheme === 'light' ?
 		'brightness(2)' : 'brightness(3)');
@@ -37,40 +38,51 @@ const useStyles = createStyles((currentTheme, { password }: Params) => {
 		},
 	};
 
-	const { score } = password;
-	const error = password.isError();
+	const { score, isError } = password;
 	const radius = theme.getDefaultRadius();
 
 	const bgShade: number = (colorScheme === 'light' ? 6 : 8);
-	const bgColor: string = {
-		'0': colors.red[bgShade],
-		'1': colors.red[bgShade],
-		'2': colors.yellow[bgShade],
-		'3': colors.cyan[bgShade],
-		'4': colors.green[bgShade],
-	}[score] || '';
+	const disabledColor: string = (colorScheme === 'light' ?
+		colors.gray[4] : colors.dark[4]);
 
+	const bgColor: string = {
+		[PasswordScore.LEVEL0]: colors.red[bgShade],
+		[PasswordScore.LEVEL1]: colors.red[bgShade],
+		[PasswordScore.LEVEL2]: colors.yellow[bgShade],
+		[PasswordScore.LEVEL3]: colors.cyan[bgShade],
+		[PasswordScore.LEVEL4]: colors.green[bgShade],
+	}[score] || (score === PasswordScore.DISABLED ? disabledColor : '');
+
+	function getBackgroundColor(condition: boolean): string {
+		if (score === PasswordScore.DISABLED) {
+			return bgColor;
+		} else if (condition) {
+			return bgColor;
+		} else {
+			return '';
+		}
+	}
 	return {
 		first: {
 			...baseStyle,
 			...(score >= 0 ? animationStyle : {}),
-			backgroundColor: (score >= 0 ? bgColor : ''),
+			backgroundColor: getBackgroundColor(score >= 0),
 			borderBottomLeftRadius: radius,
 		},
 		second: {
 			...baseStyle,
 			...(score >= 2 ? animationStyle : {}),
-			backgroundColor: (score >= 2 ? bgColor : ''),
+			backgroundColor: getBackgroundColor(score >= 2),
 		},
 		third: {
 			...baseStyle,
 			...(score >= 3 ? animationStyle : {}),
-			backgroundColor: (score >= 3 ? bgColor : ''),
+			backgroundColor: getBackgroundColor(score >= 3),
 		},
 		fourth: {
 			...baseStyle,
 			...(score >= 4 ? animationStyle : {}),
-			backgroundColor: (score >= 4 ? bgColor : ''),
+			backgroundColor: getBackgroundColor(score >= 4),
 			borderBottomRightRadius: radius,
 		},
 		input: {
@@ -83,7 +95,7 @@ const useStyles = createStyles((currentTheme, { password }: Params) => {
 		error: {
 			height: '1rem', 
 			fontSize: '0.7rem',
-			opacity: Number(error),
+			opacity: Number(isError()),
 		},
 	};
 });

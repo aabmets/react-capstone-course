@@ -1,6 +1,6 @@
 import { createStyles } from '@mantine/core';
-import { theme } from '@utils';
 import { TermsState } from '@auth/state';
+import { theme } from '@utils';
 
 
 interface Params {
@@ -27,8 +27,10 @@ const useStyles = createStyles((_, { terms }: Params) => {
 			},
 		},
 		error: {
+			color: 'red', 
 			height: '1rem', 
 			fontSize: '0.7rem',
+			textAlign: 'center',
 			opacity: Number(error),
 		},
 	};

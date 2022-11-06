@@ -1,19 +1,9 @@
-import React from 'react';
-import { Fragment } from 'react';
-import axios, { AxiosResponse } from "axios";
-import { useTranslation } from 'next-i18next';
-import { LoadingOverlay } from '@mantine/core';
-import { Box, Space, Group } from '@mantine/core';
 import * as EmailValidator from 'email-validator';
-import { BorderedButton, RedButton } from '@components';
-import { useLoadingOverlayProps } from '@auth/props';
-import { useFormDataContext } from '@auth/context';
-import { ModalState } from '@auth/state';
-import siteConfig from 'site.config';
+import * as ctx from '@auth/context';
 
 
-function useFormValidatorEffect(): () => boolean {
-	const { email, password, terms } = useFormDataContext();
+function useFormValidator(): () => boolean {
+	const { email, password, terms } = ctx.useFormDataContext();
 
 	function validateForm() {
 		let isValid = true;
@@ -57,4 +47,4 @@ function useFormValidatorEffect(): () => boolean {
 	return validateForm;
 }
 
-export default useFormValidatorEffect;
+export default useFormValidator;

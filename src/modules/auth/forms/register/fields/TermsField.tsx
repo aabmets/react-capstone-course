@@ -1,14 +1,14 @@
 import React from 'react';
-import { Fragment, ChangeEvent } from 'react';
 import { useTranslation } from 'next-i18next';
-import { UnstyledButton } from '@mantine/core';
+import { Fragment, ChangeEvent } from 'react';
 import { Checkbox, Center, Text } from '@mantine/core';
-import { useFormDataContext } from '@auth/context';
+import { UnstyledButton } from '@mantine/core';
 import useStyles from './TermsField.styles';
+import * as ctx from '@auth/context';
 
 
 function TermsCheckbox(): JSX.Element {
-	const { terms } = useFormDataContext();
+	const { terms } = ctx.useFormDataContext();
 	const { classes } = useStyles({ terms });
 	const { t } = useTranslation('auth');
 	
@@ -33,7 +33,7 @@ function TermsCheckbox(): JSX.Element {
 					radius='sm'
 				/>
 			</Center>
-			<Text color='red' align='center' className={classes.error}>
+			<Text className={classes.error}>
 				{t(terms.error)}
 			</Text>
 		</Fragment>

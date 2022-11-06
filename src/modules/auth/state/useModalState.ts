@@ -5,11 +5,11 @@ export interface ModalState {
 	readonly busy: boolean;
 	readonly key: number;
 	
-	readonly isModalOpen: () => boolean;
-	readonly isModalClosed: () => boolean;
+	readonly isOpen: () => boolean;
+	readonly isClosed: () => boolean;
 
-	readonly openModal: () => void;
-	readonly closeModal: () => void;
+	readonly open: () => void;
+	readonly close: () => void;
 
 	readonly setBusy: (value: boolean) => void;
 }
@@ -21,12 +21,12 @@ export function useModalState(): ModalState {
 	return {
 		busy,
 		key,
-		
-		isModalOpen: () => Boolean(key),
-		isModalClosed: () => !Boolean(key),
 
-		openModal: () => setKey(Math.random()),
-		closeModal: () => setKey(0),
+		isOpen: () => Boolean(key),
+		isClosed: () => !Boolean(key),
+
+		open: () => setKey(Math.random()),
+		close: () => setKey(0),
 
 		setBusy: (value: boolean) => setBusy(value),
 	};

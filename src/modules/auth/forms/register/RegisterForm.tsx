@@ -1,12 +1,13 @@
 import React from 'react';
-import { useTranslation } from 'next-i18next';
-import { Modal } from '@mantine/core';
 import { keyboard } from '@utils';
+import { Modal } from '@mantine/core';
 import { ModalState } from '@auth/state';
-import { useModalProps } from '@auth/props';
-import { useFormDataContext } from '@auth/context';
+import * as props from '@auth/props';
+import * as ctx from '@auth/context';
+import SuccessStage from './stages/SuccessStage';
+import InputStage from './stages/InputStage';
+import useHeader from './RegisterForm.header';
 import { useModalStyles } from './RegisterForm.styles';
-import { InputStage } from './stages/InputStage';
 
 
 interface Props {
@@ -14,19 +15,16 @@ interface Props {
 }
 
 function RegisterForm({ modal }: Props): JSX.Element {
-	const { form } = useFormDataContext();
+	const { form } = ctx.useFormDataContext();
 	const { classes } = useModalStyles({ form });
-	const { isModalOpen, closeModal } = modal;
-	const { t } = useTranslation('auth');
-
+	
 	const ntfw = keyboard.noTabFocusWhen(modal.busy);
-	const title = form.isInput() ? 
-		t('auth.modal.register.title') : '';
-
+	const title = useHeader();
+	
 	const modalProps = {
-		...useModalProps(),
-		opened: isModalOpen(),
-		onClose: closeModal,
+		...props.useModalProps(),
+		opened: modal.isOpen(),
+		onClose: modal.close,
 		onKeyDown: ntfw,
 		title,
 	};
@@ -34,36 +32,10 @@ function RegisterForm({ modal }: Props): JSX.Element {
 	return (
 		<Modal {...modalProps} className={classes.modal}>
 			{form.isInput() && <InputStage modal={modal}/>} 
-			{form.isSuccess() && <div>SUCCESS</div>}
+			{form.isSuccess() && <SuccessStage modal={modal}/>}
 			{form.isFailed() && <div>FAILED</div>}
 		</Modal>
 	);
 }
 
 export default RegisterForm;
-
-
-// {isSuccess() && 
-// 	<Fragment>
-// 		<Box>
-// 			<div>Account created!</div>
-// 		</Box>
-// 		<Center>
-// 			<RedButton>
-// 				<Text>Log in</Text>
-// 			</RedButton>
-// 		</Center>
-// 	</Fragment>
-// }
-// {isFailed() && 
-// 	<Fragment>
-// 		<Box>
-// 			<div>Server error!</div>
-// 		</Box>
-// 		<Center>
-// 			<BorderedButton>
-// 				<Text>Back</Text>
-// 			</BorderedButton>
-// 		</Center>
-// 	</Fragment>
-// }
