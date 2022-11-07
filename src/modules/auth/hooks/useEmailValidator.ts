@@ -4,6 +4,7 @@
 import axios from 'axios';
 import { all } from 'itertools';
 import { AxiosResponse } from 'axios';
+import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { useDatastoreContext } from '@auth/context';
 import * as EmailValidator from 'email-validator';
@@ -15,10 +16,12 @@ interface ServerResponse extends AxiosResponse {
 		available: boolean;
 	};
 }
-interface Indicator {
+
+interface Validator {
 	status: EmailStatus,
-	refresh: (value: string) => void,
+	validate: (value: string) => void,
 }
+
 export enum EmailStatus {
 	TAKEN = 'TAKEN',
 	AVAILABLE = 'AVAILABLE',
@@ -27,27 +30,36 @@ export enum EmailStatus {
 	NONE = 'NONE',
 }
 
-export function useEmailValidator(): Indicator {
+export function useEmailValidator(): Validator {
 	const { email, network } = useDatastoreContext();
 	const [status, setStatus] = useState(EmailStatus.WAITING);
+	const { t } = useTranslation('auth');
 	const { auth } = siteConfig;
 
-	function isNetworkRequest(value?: string): boolean {
-		return all([
-			EmailValidator.validate(value ?? email.value),
-			network.isLatencyGood(),
-			!email.isError(),
-		])
-	}
-	
-	function refresh(value: string): void {
-		if (isNetworkRequest(value)) {
-			setStatus(EmailStatus.PENDING);
-		} else if (network.isLatencyGood()) {
-			setStatus(EmailStatus.WAITING);
+	function validate(value: string): void {
+		const maxLen = auth.maxEmailLength;
+		if (value.length > maxLen) {
+			const msg = t('auth.email-input.error.too-long');
+			email.setError(msg.replace('$', String(maxLen)));
+			if (network.isLatencyGood()) {
+				setStatus(EmailStatus.WAITING);
+			}
 		} else {
-			setStatus(EmailStatus.NONE);
-		}
+			if (status !== EmailStatus.NONE) {
+				if (EmailValidator.validate(value)) {
+					if (network.isLatencyGood()) {
+						setStatus(EmailStatus.PENDING);
+					} else {
+						setStatus(EmailStatus.NONE);
+					}
+				} else {
+					setStatus(EmailStatus.WAITING);
+				}
+			} else if (email.isError()) {
+				email.clearError();
+			}
+		} 
+		email.setValue(value);
 	}
 
 	useEffect(() => {
@@ -56,8 +68,15 @@ export function useEmailValidator(): Indicator {
 		}
 	}, [network.getLatency()]);
 
+
 	useEffect(() => {
-		if (isNetworkRequest()) {
+		const conditions = all([
+			EmailValidator.validate(email.value),
+			network.isLatencyGood(),
+			!email.isError(),
+		]);
+
+		if (conditions) {
 			const request = {
 				url: '/api/check-email',
 				method: 'POST',
@@ -71,9 +90,11 @@ export function useEmailValidator(): Indicator {
 						if (res.data.available) {
 							setStatus(EmailStatus.AVAILABLE);
 						} else {
-							email.setError('auth.email-input.error.already-exists');
+							email.setError(t('auth.email-input.error.already-exists'));
 							setStatus(EmailStatus.TAKEN);
 						}
+					} else {
+						setStatus(EmailStatus.NONE);
 					}
 				})
 				.catch(() => {
@@ -83,5 +104,5 @@ export function useEmailValidator(): Indicator {
 		} 
 	}, [email.value]);
 
-	return { status, refresh };
+	return { status, validate };
 }

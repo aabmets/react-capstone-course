@@ -4,13 +4,11 @@ import { all } from 'itertools';
 import { Fragment } from 'react';
 import { AxiosResponse } from "axios";
 import { useTranslation } from 'next-i18next';
-import { LoadingOverlay } from '@mantine/core';
 import { Box, Space, Group } from '@mantine/core';
 import { BorderedButton, RedButton } from '@components';
 import PasswordField from '../fields/PasswordField';
 import EmailField from '../fields/EmailField';
 import TermsField from '../fields/TermsField';
-import * as props from '@auth/props';
 import * as hooks from '@auth/hooks';
 import * as ctx from '@auth/context';
 import siteConfig from 'site.config';
@@ -30,7 +28,6 @@ function InputStage(): JSX.Element {
 	const { form, modal } = data;
 	const { auth } = siteConfig;
 
-	const overlayProps = props.useLoadingOverlayProps();
 	const validateForm = hooks.useFormValidator();
 
 	function submitHandler(): void {
@@ -58,28 +55,23 @@ function InputStage(): JSX.Element {
 								res.data.password === data.password.value,
 							]);
 							if (conditions) {
-								form.setSuccess()
+								form.setSuccess();
 							} else {
-								form.setFailed()
+								form.setFailed();
 							}
 						} else {
-							form.setFailed()
+							form.setFailed();
 						}
 					})
-					.catch(() => {
-						form.setFailed();
-					})
-					.finally(() => {
-						modal.setIdle();
-					});
+					.catch(form.setFailed)
+					.finally(modal.setIdle);
 			}, auth.formSubmitDelayMsec);
 		}
 	}
 	
 	return (
 		<Fragment>
-			<LoadingOverlay {...overlayProps} visible={modal.isBusy()}/>
-			<Box sx={{ width:'100%', height:240 }}>
+			<Box sx={{ width: 360, height: 242 }}>
 				<EmailField/>
 				<Space h={5}/>
 				<PasswordField/>

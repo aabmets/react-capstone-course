@@ -21,13 +21,13 @@ const useStyles = createStyles((_, { terms }: Params) => {
 			color: theme.getShadedPrimaryColor(),
 		},
 		checkbox: {
+			display: 'flex',
 			'.mantine-Checkbox-error': {
 				marginTop: 0,
 				paddingLeft: 0,
 			},
 		},
 		error: {
-			color: 'red', 
 			height: '1rem', 
 			fontSize: '0.7rem',
 			textAlign: 'center',

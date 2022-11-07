@@ -4,7 +4,7 @@ import { buttonStyles } from '@styles';
 
 
 interface ButtonProps {
-	children?: JSX.Element | JSX.Element[];
+	children?: string | JSX.Element | JSX.Element[];
 	[key: string]: any;
 }
 

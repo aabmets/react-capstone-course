@@ -1,6 +1,6 @@
-import { DatastoreContext } from './context/DatastoreContext';
-import { DatastoreProvider } from './context/DatastoreContext';
-import { useDatastoreContext } from './context/DatastoreContext';
+import { DatastoreContext } from './context/Datastore';
+import { DatastoreProvider } from './context/Datastore';
+import { useDatastoreContext } from './context/Datastore';
 
 export { DatastoreContext };
 export { DatastoreProvider };

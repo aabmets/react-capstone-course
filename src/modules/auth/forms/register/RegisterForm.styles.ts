@@ -37,7 +37,7 @@ export const useHeaderStyles = createStyles(() => {
 		},
 		hoverCard_title: {
 			color: orange, 
-			fontSize: '0.9rem', 
+			fontSize: '0.8rem', 
 			fontFamily: 'Verdana', 
 			fontWeight: 800,
 			textAlign: 'center',

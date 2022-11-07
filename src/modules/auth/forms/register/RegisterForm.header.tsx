@@ -41,7 +41,7 @@ function useHeader(): JSX.Element {
 
 					<HoverCard.Dropdown className={classes.hoverCard_dropdown}>
 						<Text className={classes.hoverCard_title}>
-							{t('auth.hovercard.bad-network.title')}
+							{t('auth.hovercard.bad-network.title').toUpperCase()}
 						</Text>
 
 						<Space h={5}/>

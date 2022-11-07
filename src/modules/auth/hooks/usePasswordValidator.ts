@@ -5,36 +5,38 @@ import axios from 'axios';
 import { all } from 'itertools';
 import { AxiosResponse } from 'axios';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'next-i18next';
 import { useDatastoreContext } from '@auth/context';
+import { PasswordScore } from '@auth/state';
 import siteConfig from 'site.config';
 
 
 interface ServerResponse extends AxiosResponse {
 	data: {
 		score: PasswordScore;
-	}
-}
-export enum PasswordScore {
-	DISABLED = -2,
-	NONE = -1,
-	LEVEL0 = 0,
-	LEVEL1 = 1,
-	LEVEL2 = 2,
-	LEVEL3 = 3,
-	LEVEL4 = 4,
+	};
 }
 
-export function usePasswordValidator(): number {
+interface Validator {
+	token: number,
+	validate: (value: string) => void,
+}
+
+export function usePasswordValidator(): Validator {
 	const { email, password, network } = useDatastoreContext();
 	const [token, setToken] = useState(0);
+	const { t } = useTranslation('auth');
 	const { auth } = siteConfig;
 
-	function isNetworkRequest() {
-		return all([
-			password.value !== '',
-			network.isLatencyGood(),
-			!password.isError(),
-		])
+	function validate(value: string): void {
+		const maxLen = auth.maxPasswordLength;
+		if (value.length > maxLen) {
+			const msg = t('auth.password-input.error.too-long');
+			password.setError(msg.replace('$', String(maxLen)));
+		} else if (password.isError()) {
+			password.clearError();
+		} 
+		password.setValue(value);
 	}
 
 	useEffect(() => {
@@ -43,8 +45,15 @@ export function usePasswordValidator(): number {
 		}
 	}, [network.getLatency()]);
 
+
 	useEffect(() => {
-		if (isNetworkRequest()) {
+		const conditions = all([
+			password.value !== '',
+			network.isLatencyGood(),
+			!password.isError(),
+		]);
+
+		if (conditions) {
 			const request = {
 				url: '/api/check-password',
 				method: 'POST',
@@ -68,9 +77,9 @@ export function usePasswordValidator(): number {
 					password.setScore(PasswordScore.DISABLED);
 				});
 		} else if (network.isLatencyGood()) {
-			password.setScore(PasswordScore.NONE);
+			password.setScore(PasswordScore.EMPTY);
 		}
 	}, [password.value]);
 
-	return token;
+	return { token, validate };
 }

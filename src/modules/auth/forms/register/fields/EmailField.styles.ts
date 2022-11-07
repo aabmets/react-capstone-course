@@ -11,6 +11,7 @@ const useStyles = createStyles((_, { email }: Params) => {
 
 	return {
 		error: {
+			marginTop: '2px',
 			height: '1rem', 
 			fontSize: '0.7rem',
 			opacity: Number(error),

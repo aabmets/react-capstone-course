@@ -4,7 +4,6 @@ import siteConfig from 'site.config';
 
 
 type Setter<T> = React.Dispatch<React.SetStateAction<T>> | ((newValue: T) => void);
-const NONE = '';
 
 export interface EmailState {
 	readonly value: string;
@@ -29,7 +28,7 @@ export function useEmailState(): EmailState {
 		setValue,
 		setError,
 		
-		isError: () => error !== NONE,
-		clearError: () => setError(NONE),
+		isError: () => error !== '',
+		clearError: () => setError(''),
 	};
 }

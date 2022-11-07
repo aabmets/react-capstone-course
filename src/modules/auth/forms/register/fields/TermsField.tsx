@@ -1,6 +1,7 @@
 import React from 'react';
+import { Fragment } from 'react';
+import { keyboard } from '@utils';
 import { useTranslation } from 'next-i18next';
-import { Fragment, ChangeEvent } from 'react';
 import { Checkbox, Center, Text } from '@mantine/core';
 import { UnstyledButton } from '@mantine/core';
 import useStyles from './TermsField.styles';
@@ -12,10 +13,15 @@ function TermsCheckbox(): JSX.Element {
 	const { classes } = useStyles({ terms });
 	const { t } = useTranslation('auth');
 	
-	function eventHandler(event: ChangeEvent<HTMLInputElement>) {
+	function eventHandler(event: React.ChangeEvent<HTMLInputElement>) {
 		terms.setValue(event.target.checked);
 		terms.clearError();
 	}
+
+	const keyDownHandler = keyboard.callWhenKeypress('Enter', () => {
+		terms.setValue(!terms.value);
+		terms.clearError();
+	});
 
 	return (
 		<Fragment>
@@ -27,13 +33,15 @@ function TermsCheckbox(): JSX.Element {
 					</UnstyledButton>
 				</Text>
 				<Checkbox
+					checked={terms.value}
+					onKeyDown={keyDownHandler}
 					onChange={eventHandler}
 					error={terms.isError()}
 					className={classes.checkbox}
 					radius='sm'
 				/>
 			</Center>
-			<Text className={classes.error}>
+			<Text color='red' className={classes.error}>
 				{t(terms.error)}
 			</Text>
 		</Fragment>

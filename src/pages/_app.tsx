@@ -6,7 +6,7 @@ import { MantineProvider, ColorSchemeProvider } from '@mantine/core';
 import { ColorScheme, MantineThemeOverride } from '@mantine/core'; 
 import { NotificationsProvider } from '@mantine/notifications';
 import { RouterTransition } from '@components';
-import { AppwriteProvider } from '@appwrite';
+import { AppwriteProvider } from '@context';
 import { AppScaffold } from '@app-scaffold';
 import { AllHeadTags } from '@head-tags';
 import { cookies } from '@utils';

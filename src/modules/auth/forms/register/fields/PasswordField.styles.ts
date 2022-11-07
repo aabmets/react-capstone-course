@@ -1,7 +1,8 @@
+import { any } from 'itertools';
 import { createStyles } from '@mantine/core';
-import { buttonStyles } from '@styles';
 import { PasswordState } from '@auth/state';
-import { PasswordScore } from '@auth/hooks';
+import { PasswordScore } from '@auth/state';
+import { buttonStyles } from '@styles';
 import { theme } from '@utils';
 
 
@@ -38,53 +39,41 @@ const useStyles = createStyles((currentTheme, { password }: Params) => {
 		},
 	};
 
-	const { score, isError } = password;
-	const radius = theme.getDefaultRadius();
-
 	const bgShade: number = (colorScheme === 'light' ? 6 : 8);
 	const disabledColor: string = (colorScheme === 'light' ?
 		colors.gray[4] : colors.dark[4]);
 
 	const bgColor: string = {
+		[PasswordScore.EMPTY]: '',
+		[PasswordScore.DISABLED]: disabledColor,
 		[PasswordScore.LEVEL0]: colors.red[bgShade],
 		[PasswordScore.LEVEL1]: colors.red[bgShade],
 		[PasswordScore.LEVEL2]: colors.yellow[bgShade],
 		[PasswordScore.LEVEL3]: colors.cyan[bgShade],
 		[PasswordScore.LEVEL4]: colors.green[bgShade],
-	}[score] || (score === PasswordScore.DISABLED ? disabledColor : '');
+	}[password.score];
 
-	function getBackgroundColor(condition: boolean): string {
-		if (score === PasswordScore.DISABLED) {
-			return bgColor;
-		} else if (condition) {
-			return bgColor;
-		} else {
-			return '';
-		}
+	function getStyle(level: PasswordScore): object {
+		const condition = password.score >= level;
+		const style = {
+			...baseStyle,
+			...(condition ? animationStyle : {}),
+			backgroundColor: any([
+				password.score === PasswordScore.DISABLED,
+				password.score === PasswordScore.EMPTY,
+				condition,
+			]) ? bgColor : '',
+		};
+		return style;
 	}
+
+	const radius = theme.getDefaultRadius();
+
 	return {
-		first: {
-			...baseStyle,
-			...(score >= 0 ? animationStyle : {}),
-			backgroundColor: getBackgroundColor(score >= 0),
-			borderBottomLeftRadius: radius,
-		},
-		second: {
-			...baseStyle,
-			...(score >= 2 ? animationStyle : {}),
-			backgroundColor: getBackgroundColor(score >= 2),
-		},
-		third: {
-			...baseStyle,
-			...(score >= 3 ? animationStyle : {}),
-			backgroundColor: getBackgroundColor(score >= 3),
-		},
-		fourth: {
-			...baseStyle,
-			...(score >= 4 ? animationStyle : {}),
-			backgroundColor: getBackgroundColor(score >= 4),
-			borderBottomRightRadius: radius,
-		},
+		first: { ...getStyle(PasswordScore.LEVEL0), borderBottomLeftRadius: radius },
+		second: { ...getStyle(PasswordScore.LEVEL2) },
+		third: { ...getStyle(PasswordScore.LEVEL3) },
+		fourth: { ...getStyle(PasswordScore.LEVEL4), borderBottomRightRadius: radius },
 		input: {
 			'.mantine-PasswordInput-input': {
 				borderRadius: 0,
@@ -93,9 +82,10 @@ const useStyles = createStyles((currentTheme, { password }: Params) => {
 			},
 		},
 		error: {
+			marginTop: '2px',
 			height: '1rem', 
 			fontSize: '0.7rem',
-			opacity: Number(isError()),
+			opacity: Number(password.isError()),
 		},
 	};
 });

@@ -24,13 +24,13 @@
 		"paths": {
 			// common namespace
 			"@components": ["src/common/components"],
+			"@context": ["src/common/context"],
 			"@server": ["src/common/server"],
 			"@styles": ["src/common/styles"],
 			"@utils": ["src/common/utils"],
 
 			// simple modules
 			"@app-scaffold": ["src/modules/app-scaffold/exports"],
-			"@appwrite": ["src/modules/appwrite/exports"],
 			"@head-tags": ["src/modules/head-tags/exports"],
 
 			// complex modules

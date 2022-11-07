@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 
 type Setter<T> = React.Dispatch<React.SetStateAction<T>> | ((newValue: T) => void);
-const NONE = '';
 
 export interface TermsState {
 	readonly value: boolean;
@@ -26,7 +25,7 @@ export function useTermsState(): TermsState {
 		setValue,
 		setError,
 
-		isError: () => error !== NONE,
-		clearError: () => setError(NONE),
+		isError: () => error !== '',
+		clearError: () => setError(''),
 	};
 }

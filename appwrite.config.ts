@@ -1,8 +1,8 @@
 // Appwrite Project Configuration Settings
 
 const appwriteConfig = {
-	api_endpoint: 'http://localhost/v1',
-	project_id: 'fancy-palace-exhibit',
+	apiEndpoint: 'http://localhost/v1',
+	projectID: 'fancy-palace-exhibit',
 	buckets: [
 		{
 			name: 'product-images',

@@ -6,7 +6,7 @@ import siteConfig from 'site.config';
 
 
 interface ButtonProps {
-	children?: JSX.Element | JSX.Element[];
+	children?: string | JSX.Element | JSX.Element[];
 	[key: string]: any;
 }
 

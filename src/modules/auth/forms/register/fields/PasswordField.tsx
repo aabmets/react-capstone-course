@@ -6,7 +6,6 @@ import { Button, UnstyledButton } from '@mantine/core';
 import { IconKey } from '@tabler/icons';
 import * as ctx from '@auth/context';
 import * as hooks from '@auth/hooks';
-import siteConfig from 'site.config';
 import useStyles from './PasswordField.styles';
 
 
@@ -15,25 +14,12 @@ export function PasswordField(): JSX.Element {
 	const { classes } = useStyles({ password });
 	const { t } = useTranslation('auth');
 	
-	const token = hooks.usePasswordValidator();
+	const { token, validate } = hooks.usePasswordValidator();
 
-	function eventHandler(event: ChangeEvent<HTMLInputElement>) {
-		const maxLen = siteConfig.auth.maxPasswordLength;
-		const value = event.target.value;
-
-		if (value.length > maxLen) {
-			const msg = t('auth.password-input.error.too-long');
-			password.setError(msg.replace('$', String(maxLen)));
-		} else if (password.isError()) {
-			password.clearError();
-		} 
-		password.setValue(value);
-	}
-	
 	return (
 		<Fragment>
 			<PasswordInput 
-				onChange={eventHandler}
+				onChange={(event) => validate(event.target.value)}
 				error={password.isError()}
 				className={classes.input}
 				label={t('auth.password-input.label')}
@@ -47,7 +33,7 @@ export function PasswordField(): JSX.Element {
 				<UnstyledButton key={token + 3} tabIndex={-1} className={classes.third}/>
 				<UnstyledButton key={token + 4} tabIndex={-1} className={classes.fourth}/>
 	  		</Button.Group>
-			<Text color="red" className={classes.error}>
+			<Text color='red' className={classes.error}>
 				{t(password.error)}
 			</Text>
 		</Fragment>

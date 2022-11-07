@@ -11,7 +11,7 @@ export function useModalProps(): ModalProps {
 		colors['dark'][3] : colors['gray'][7];
 
 	return {
-		size: 400,
+		size: 'target',
 		overlayColor,
 		overlayBlur: 3,
 		overlayOpacity: 0.2,

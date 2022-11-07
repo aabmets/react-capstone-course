@@ -27,7 +27,7 @@ export function RegisterButton() {
 				<RegisterForm />
 			</DatastoreProvider>
   
-			<RedButton onClick={openModalForm}>
+			<RedButton onClick={openModalForm} title={t('auth.button.register.title')}>
 				{t('auth.button.register')}
 			</RedButton>
 	  	</Fragment>
