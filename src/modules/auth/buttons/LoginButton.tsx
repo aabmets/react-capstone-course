@@ -1,12 +1,10 @@
 import React from 'react';
 import { Button } from '@mantine/core';
 
-function LoginButton() {
+export function LoginButton() {
 	return (
 		<Button>
 			
 		</Button>
 	);
 }
-
-export default LoginButton;

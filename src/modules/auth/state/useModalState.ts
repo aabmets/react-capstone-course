@@ -2,32 +2,34 @@ import { useState } from 'react';
 
 
 export interface ModalState {
-	readonly busy: boolean;
-	readonly key: number;
+	isOpened: () => boolean,
+	isClosed: () => boolean,
+
+	open: () => void,
+	close: () => void,
+
+	isBusy: () => boolean,
+	isIdle: () => boolean,
 	
-	readonly isOpen: () => boolean;
-	readonly isClosed: () => boolean;
-
-	readonly open: () => void;
-	readonly close: () => void;
-
-	readonly setBusy: (value: boolean) => void;
+	setBusy: () => void,
+	setIdle: () => void,
 }
 
 export function useModalState(): ModalState {
+	const [opened, setOpened] = useState(false);
 	const [busy, setBusy] = useState(false);
-	const [key, setKey] = useState(0);
 
 	return {
-		busy,
-		key,
+		isOpened: () => opened,
+		isClosed: () => !opened,
 
-		isOpen: () => Boolean(key),
-		isClosed: () => !Boolean(key),
+		open: () => setOpened(true),
+		close: () => setOpened(false),
 
-		open: () => setKey(Math.random()),
-		close: () => setKey(0),
+		isBusy: () => busy,
+		isIdle: () => !busy,
 
-		setBusy: (value: boolean) => setBusy(value),
+		setBusy: () => setBusy(true),
+		setIdle: () => setBusy(false),
 	};
 }

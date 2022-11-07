@@ -8,7 +8,7 @@ import * as ctx from '@auth/context';
 
 
 function TermsCheckbox(): JSX.Element {
-	const { terms } = ctx.useFormDataContext();
+	const { terms } = ctx.useDatastoreContext();
 	const { classes } = useStyles({ terms });
 	const { t } = useTranslation('auth');
 	

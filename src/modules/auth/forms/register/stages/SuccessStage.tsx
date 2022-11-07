@@ -13,12 +13,9 @@ import { ModalState } from '@auth/state';
 import Lottie, { LottieRefCurrentProps } from 'lottie-react';
 import successLottie from 'public/success_checkmark_animated.json';
 
-interface Props {
-	modal: ModalState;
-}
 
-function SuccessStage({ modal }: Props): JSX.Element {
-	const { email, password } = ctx.useFormDataContext();
+function SuccessStage(): JSX.Element {
+	const { email, password } = ctx.useDatastoreContext();
 	const { t } = useTranslation('auth');
 
 	const lottieRef = useRef<LottieRefCurrentProps | null>(null);

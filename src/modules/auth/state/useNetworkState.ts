@@ -1,6 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* warning disabled for special case of useEffect */
-
 import axios from 'axios';
 import { useState } from 'react';
 import { AxiosResponse } from 'axios';
@@ -12,7 +9,6 @@ interface ServerResponse extends AxiosResponse {
 		serverTime: number;
 	}
 }
-
 export interface NetworkState {
 	readonly isLatencyGood: () => boolean;
 	readonly isLatencyBad: () => boolean;
@@ -20,14 +16,12 @@ export interface NetworkState {
 	readonly setLatencyGood: () => void,
 	readonly setLatencyBad: () => void,
 
+	readonly getLatency: () => number;
 	readonly testLatency: () => void;
-	readonly latency: State;
 }
 
-enum State {GOOD, BAD};
-
 export function useNetworkState(): NetworkState {
-	const [latency, setLatency] = useState(State.GOOD);
+	const [latency, setLatency] = useState(0);
 	const { auth } = siteConfig;
 
 	function testLatency() {
@@ -41,27 +35,22 @@ export function useNetworkState(): NetworkState {
 			.then((res: ServerResponse) => {
 				if (res.status === 200) {
 					const serverTime = res.data.serverTime;
-					const roundTrip = serverTime - clientTime;
-					if (roundTrip < auth.maxLatencyMsec) {
-						setLatency(State.GOOD);
-					} else {
-						setLatency(State.BAD);
-					}
+					setLatency(serverTime - clientTime);
 				} else {
-					setLatency(State.BAD);
+					setLatency(Infinity);
 				}
 			})
-			.catch(() => setLatency(State.BAD));
+			.catch(() => setLatency(Infinity));
 	}
 	
 	return {
-		isLatencyGood: () => latency === State.GOOD,
-		isLatencyBad: () => latency === State.BAD,
+		isLatencyGood: () => latency < auth.maxLatencyMsec,
+		isLatencyBad: () => latency > auth.maxLatencyMsec,
 
-		setLatencyGood: () => setLatency(State.GOOD),
-		setLatencyBad: () => setLatency(State.BAD),
+		setLatencyGood: () => setLatency(0),
+		setLatencyBad: () => setLatency(Infinity),
 
+		getLatency: () => latency,
 		testLatency,
-		latency,
 	};
 }

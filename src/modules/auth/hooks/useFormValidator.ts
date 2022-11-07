@@ -1,9 +1,9 @@
+import { useDatastoreContext } from '@auth/context';
 import * as EmailValidator from 'email-validator';
-import * as ctx from '@auth/context';
 
 
-function useFormValidator(): () => boolean {
-	const { email, password, terms } = ctx.useFormDataContext();
+export function useFormValidator(): () => boolean {
+	const { email, password, terms } = useDatastoreContext();
 
 	function validateForm() {
 		let isValid = true;
@@ -46,5 +46,3 @@ function useFormValidator(): () => boolean {
 	
 	return validateForm;
 }
-
-export default useFormValidator;

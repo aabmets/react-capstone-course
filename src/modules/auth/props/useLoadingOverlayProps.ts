@@ -3,7 +3,7 @@ import { useMantineColorScheme } from '@mantine/core';
 import siteConfig from "site.config";
 
 
-function useLoadingOverlayProps(): LoadingOverlayProps {
+export function useLoadingOverlayProps(): LoadingOverlayProps {
 	const { colorScheme } = useMantineColorScheme();
 	const { colors } = siteConfig.theme;
 	
@@ -17,5 +17,3 @@ function useLoadingOverlayProps(): LoadingOverlayProps {
 		loaderProps: {transform: 'scale(2)'},
 	} as LoadingOverlayProps;
 }
-
-export default useLoadingOverlayProps;

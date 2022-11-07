@@ -5,7 +5,7 @@ import axios from 'axios';
 import { all } from 'itertools';
 import { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
-import { useFormDataContext } from '@auth/context';
+import { useDatastoreContext } from '@auth/context';
 import * as EmailValidator from 'email-validator';
 import siteConfig from 'site.config';
 
@@ -27,8 +27,8 @@ export enum EmailStatus {
 	NONE = 'NONE',
 }
 
-function useEmailValidator(): Indicator {
-	const { email, network } = useFormDataContext();
+export function useEmailValidator(): Indicator {
+	const { email, network } = useDatastoreContext();
 	const [status, setStatus] = useState(EmailStatus.WAITING);
 	const { auth } = siteConfig;
 
@@ -54,7 +54,7 @@ function useEmailValidator(): Indicator {
 		if (network.isLatencyBad()) {
 			setStatus(EmailStatus.NONE);
 		}
-	}, [network.latency]);
+	}, [network.getLatency()]);
 
 	useEffect(() => {
 		if (isNetworkRequest()) {
@@ -85,5 +85,3 @@ function useEmailValidator(): Indicator {
 
 	return { status, refresh };
 }
-
-export default useEmailValidator;

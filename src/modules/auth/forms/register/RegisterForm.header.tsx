@@ -9,7 +9,7 @@ import * as ctx from '@auth/context';
 
 
 function useHeader(): JSX.Element {
-	const { form, network } = ctx.useFormDataContext();
+	const { form, network } = ctx.useDatastoreContext();
 	const { classes } = useHeaderStyles();
 	const { t } = useTranslation('auth');
 

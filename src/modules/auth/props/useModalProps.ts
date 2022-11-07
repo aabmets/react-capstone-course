@@ -1,9 +1,9 @@
-import { ModalProps } from '@mantine/core';
 import { useMantineColorScheme } from '@mantine/core';
+import { ModalProps } from '@mantine/core';
 import siteConfig from "site.config";
 
 
-function useModalProps(): ModalProps {
+export function useModalProps(): ModalProps {
 	const { colorScheme } = useMantineColorScheme();
 	const { colors } = siteConfig.theme;
 
@@ -13,14 +13,14 @@ function useModalProps(): ModalProps {
 	return {
 		size: 400,
 		overlayColor,
-		overlayBlur: 2,
+		overlayBlur: 3,
 		overlayOpacity: 0.2,
 		transition: 'pop',
 		transitionDuration: 200,
+		exitTransitionDuration: 200,
+		transitionTimingFunction: "ease",
 		closeOnClickOutside: false,
 		closeOnEscape: true,
 		centered: true,
 	} as ModalProps;
 }
-
-export default useModalProps;

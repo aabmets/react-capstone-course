@@ -11,7 +11,7 @@ import useStyles from './PasswordField.styles';
 
 
 export function PasswordField(): JSX.Element {
-	const { password } = ctx.useFormDataContext();
+	const { password } = ctx.useDatastoreContext();
 	const { classes } = useStyles({ password });
 	const { t } = useTranslation('auth');
 	

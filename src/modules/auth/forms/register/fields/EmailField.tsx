@@ -15,7 +15,7 @@ import useStyles from './EmailField.styles';
 
 
 function EmailField(): JSX.Element {
-	const { email } = ctx.useFormDataContext();
+	const { email } = ctx.useDatastoreContext();
 	const { classes } = useStyles({ email });
 	const { t } = useTranslation('auth');
 

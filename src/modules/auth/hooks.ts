@@ -1,6 +1,6 @@
-import useEmailValidator from "./hooks/useEmailValidator";
-import usePasswordValidator from "./hooks/usePasswordValidator";
-import useFormValidator from "./hooks/useFormValidator";
+import { useEmailValidator } from "./hooks/useEmailValidator";
+import { usePasswordValidator } from "./hooks/usePasswordValidator";
+import { useFormValidator } from "./hooks/useFormValidator";
 
 export { useEmailValidator };
 export { usePasswordValidator };

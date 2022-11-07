@@ -10,11 +10,10 @@ import { BorderedButton, RedButton } from '@components';
 import PasswordField from '../fields/PasswordField';
 import EmailField from '../fields/EmailField';
 import TermsField from '../fields/TermsField';
-import siteConfig from 'site.config';
-import * as ctx from '@auth/context';
 import * as props from '@auth/props';
 import * as hooks from '@auth/hooks';
-import { ModalState } from '@auth/state';
+import * as ctx from '@auth/context';
+import siteConfig from 'site.config';
 
 
 interface ServerResponse extends AxiosResponse {
@@ -24,13 +23,11 @@ interface ServerResponse extends AxiosResponse {
 		password: string;
 	}
 }
-interface Props {
-	modal: ModalState;
-}
 
-function InputStage({ modal }: Props): JSX.Element {
-	const { form, email, password, terms } = ctx.useFormDataContext();
+function InputStage(): JSX.Element {
+	const data = ctx.useDatastoreContext();
 	const { t } = useTranslation('auth');
+	const { form, modal } = data;
 	const { auth } = siteConfig;
 
 	const overlayProps = props.useLoadingOverlayProps();
@@ -38,22 +35,27 @@ function InputStage({ modal }: Props): JSX.Element {
 
 	function submitHandler(): void {
 		if (validateForm()) {
-			modal.setBusy(true);
+			modal.setBusy();
+
 			setTimeout(() => {
 				const request = {
 					url: '/api/create-user',
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					timeout: auth.formSubmitTimeoutMsec,
-					data: { email, password, terms },
+					data: { 
+						email: data.email.value, 
+						password: data.password.value, 
+						terms: data.terms.value,
+					},
 				}
 				axios(request)
 					.then((res: ServerResponse) => {
 						if (res.status === 200) {
 							const conditions = all([
 								res.data.message === 'OK',
-								res.data.username === email.value,
-								res.data.password === password.value,
+								res.data.username === data.email.value,
+								res.data.password === data.password.value,
 							]);
 							if (conditions) {
 								form.setSuccess()
@@ -68,9 +70,7 @@ function InputStage({ modal }: Props): JSX.Element {
 						form.setFailed();
 					})
 					.finally(() => {
-						modal.setBusy(false);
-						// modal.closeModal();
-						
+						modal.setIdle();
 					});
 			}, auth.formSubmitDelayMsec);
 		}
@@ -78,7 +78,7 @@ function InputStage({ modal }: Props): JSX.Element {
 	
 	return (
 		<Fragment>
-			<LoadingOverlay {...overlayProps} visible={modal.busy}/>
+			<LoadingOverlay {...overlayProps} visible={modal.isBusy()}/>
 			<Box sx={{ width:'100%', height:240 }}>
 				<EmailField/>
 				<Space h={5}/>
@@ -87,10 +87,10 @@ function InputStage({ modal }: Props): JSX.Element {
 				<TermsField/>
 			</Box>
 			<Group position='apart'>
-				<BorderedButton disabled={modal.busy} onClick={modal.close}>
+				<BorderedButton disabled={modal.isBusy()} onClick={modal.close}>
 					{t("auth.button.back")}
 				</BorderedButton>
-				<RedButton disabled={modal.busy} onClick={submitHandler}>
+				<RedButton disabled={modal.isBusy()} onClick={submitHandler}>
 					{t("auth.button.submit")}
 				</RedButton>
 			</Group>

@@ -1,29 +1,25 @@
 import React from 'react';
 import { keyboard } from '@utils';
 import { Modal } from '@mantine/core';
-import { ModalState } from '@auth/state';
-import * as props from '@auth/props';
 import * as ctx from '@auth/context';
+import * as props from '@auth/props';
 import SuccessStage from './stages/SuccessStage';
 import InputStage from './stages/InputStage';
 import useHeader from './RegisterForm.header';
 import { useModalStyles } from './RegisterForm.styles';
 
 
-interface Props {
-	modal: ModalState;
-}
-
-function RegisterForm({ modal }: Props): JSX.Element {
-	const { form } = ctx.useFormDataContext();
-	const { classes } = useModalStyles({ form });
+export function RegisterForm(): JSX.Element {
+	const { form, modal } = ctx.useDatastoreContext();
+	const { classes } = useModalStyles();
 	
-	const ntfw = keyboard.noTabFocusWhen(modal.busy);
+	const ntfw = keyboard.noTabFocusWhen(modal.isBusy());
 	const title = useHeader();
 	
 	const modalProps = {
 		...props.useModalProps(),
-		opened: modal.isOpen(),
+		withCloseButton: form.isInput(),
+		opened: modal.isOpened(),
 		onClose: modal.close,
 		onKeyDown: ntfw,
 		title,
@@ -31,11 +27,9 @@ function RegisterForm({ modal }: Props): JSX.Element {
 
 	return (
 		<Modal {...modalProps} className={classes.modal}>
-			{form.isInput() && <InputStage modal={modal}/>} 
-			{form.isSuccess() && <SuccessStage modal={modal}/>}
+			{form.isInput() && <InputStage />} 
+			{form.isSuccess() && <SuccessStage />}
 			{form.isFailed() && <div>FAILED</div>}
 		</Modal>
 	);
 }
-
-export default RegisterForm;

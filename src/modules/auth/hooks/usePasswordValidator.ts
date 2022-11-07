@@ -5,7 +5,7 @@ import axios from 'axios';
 import { all } from 'itertools';
 import { AxiosResponse } from 'axios';
 import { useState, useEffect } from 'react';
-import * as ctx from '@auth/context';
+import { useDatastoreContext } from '@auth/context';
 import siteConfig from 'site.config';
 
 
@@ -24,8 +24,8 @@ export enum PasswordScore {
 	LEVEL4 = 4,
 }
 
-function usePasswordValidator(): number {
-	const { email, password, network } = ctx.useFormDataContext();
+export function usePasswordValidator(): number {
+	const { email, password, network } = useDatastoreContext();
 	const [token, setToken] = useState(0);
 	const { auth } = siteConfig;
 
@@ -41,7 +41,7 @@ function usePasswordValidator(): number {
 		if (network.isLatencyBad()) {
 			password.setScore(PasswordScore.DISABLED);
 		}
-	}, [network.latency]);
+	}, [network.getLatency()]);
 
 	useEffect(() => {
 		if (isNetworkRequest()) {
@@ -74,5 +74,3 @@ function usePasswordValidator(): number {
 
 	return token;
 }
-
-export default usePasswordValidator;
