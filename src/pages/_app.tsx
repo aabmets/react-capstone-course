@@ -1,6 +1,6 @@
 import React from 'react';
-import { Fragment, useState } from 'react';
 import { AppProps } from 'next/app';
+import { Fragment, useState } from 'react';
 import { appWithTranslation } from 'next-i18next';
 import { MantineProvider, ColorSchemeProvider } from '@mantine/core';
 import { ColorScheme, MantineThemeOverride } from '@mantine/core'; 

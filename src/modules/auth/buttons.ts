@@ -1,6 +1,6 @@
-import { LoginButton } from "./buttons/LoginButton";
-import { LogoutButton } from "./buttons/LogoutButton";
-import { RegisterButton } from "./buttons/RegisterButton";
+import { LoginButton } from "./buttons/login/LoginButton";
+import { LogoutButton } from "./buttons/logout/LogoutButton";
+import { RegisterButton } from "./buttons/register/RegisterButton";
 
 export { LoginButton };
 export { LogoutButton };

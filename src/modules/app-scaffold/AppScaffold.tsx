@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from 'react';
 import { AppShell }  from '@mantine/core';
 import Navbar from './Navbar';
 import Header from './Header';
@@ -12,18 +11,10 @@ interface Page {
 }
 
 function AppScaffold({ children }: Page): JSX.Element {
-	const [opened, setOpened] = useState<boolean>(false);
-
-	function toggleOpened() {
-		setOpened(!opened);
-	}
-
 	return (
-		<AppShell padding='md'
-			navbarOffsetBreakpoint="sm"
-			asideOffsetBreakpoint="sm"
-			navbar={<Navbar opened={opened} />}
-			header={<Header opened={opened} toggleOpened={toggleOpened} />}
+		<AppShell
+			navbar={<Navbar />}
+			header={<Header />}
 			footer={<Footer />}
 			aside={<Aside />} >
 				{children}

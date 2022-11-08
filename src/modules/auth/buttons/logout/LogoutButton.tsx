@@ -1,16 +1,19 @@
 import React from 'react';
 import { Fragment } from 'react';
+import { useTranslation } from 'next-i18next';
+import { useLocalStorage } from 'usehooks-ts';
 import { useMantineColorScheme } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
-import { useLocalStorage } from 'usehooks-ts';
-import { useTranslation } from 'next-i18next';
+import { IconLogout } from '@tabler/icons';
 import { BorderedButton } from '@components';
 import { useAppwriteContext } from '@context';
-import { IconLogout } from '@tabler/icons';
+import siteConfig from 'site.config';
 
+
+const lsKey = siteConfig.auth.localStorage.currentUser;
 
 export function LogoutButton(): JSX.Element {
-	const [user, setUser] = useLocalStorage('logged-in-user', '');
+	const [user, setUser] = useLocalStorage(lsKey, '');
 	const { colorScheme } = useMantineColorScheme();
 	const { account } = useAppwriteContext();
 	const { t } = useTranslation('auth');

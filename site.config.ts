@@ -39,6 +39,9 @@ const siteConfig = {
 		formSubmitDelayMsec: 500,
 		formSubmitTimeoutMsec: 10000,
 		maxLatencyMsec: 1000,
+		localStorage: {
+			currentUser: 'current-user',
+		},
 	},
 	other: {
 		nav_progress_size: 4,

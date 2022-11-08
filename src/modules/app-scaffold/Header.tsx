@@ -1,31 +1,25 @@
 import React from 'react';
 import { Header as MantineHeader } from '@mantine/core';
-import { MediaQuery, Burger } from '@mantine/core'
-import siteConfig from 'site.config';
+import { Flex, Center } from '@mantine/core';
+import { ColorSchemeToggle } from '@components';
+import { LanguageSelector } from '@components';
+import { RegisterButton } from '@auth/buttons';
+import { LogoutButton } from '@auth/buttons';
+import { LoginButton } from '@auth/buttons';
 
 
-interface MenuState {
-	opened: boolean;
-	toggleOpened?: () => void;
-}
-
-function Header({ opened, toggleOpened }: MenuState): JSX.Element {
-	const { gray } = siteConfig.theme.colors;
+function Header(): JSX.Element {
 	return (
 		<MantineHeader height={70} p="md">
-			<div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-				<MediaQuery largerThan="sm" styles={{ display: 'none' }}>
-					<Burger
-						opened={opened}
-						onClick={toggleOpened}
-						size="sm"
-						color={gray[6]}
-						mr="xl"
-					/>
-				</MediaQuery>
-
-            	Application header
-          	</div>
+			<Center>
+				<Flex gap="xl">
+					<ColorSchemeToggle />
+					<LanguageSelector />
+					<LogoutButton />
+					<LoginButton />
+					<RegisterButton />
+				</Flex>
+			</Center>
 		</MantineHeader>
 	);
 }

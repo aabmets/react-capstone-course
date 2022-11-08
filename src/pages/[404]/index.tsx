@@ -1,16 +1,26 @@
 import React from 'react';
-import Image from 'next/image';
+import Lottie from 'lottie-react';
 import { NextPageContext } from 'next';
+import { Center } from '@mantine/core';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getRequestAttributes } from '@server';
-import { Group } from '@mantine/core';
+import notFoundLottie from 'public/404-lottie.json';
 
 
 function MainPage() {
+	const lottieProps = {
+		loop: true,
+		animationData: notFoundLottie,
+		style: { 
+			width: '50vh', 
+			height: 'auto',
+		},
+	};
+
 	return (
-		<Group position="center">
-			<Image src="/background.jpg" alt='' width={640} height={425}/>
-		</Group>
+		<Center sx={{position: 'relative', height: '100%'}}>
+			<Lottie {...lottieProps} /> 
+		</Center>
 	);
 }
 

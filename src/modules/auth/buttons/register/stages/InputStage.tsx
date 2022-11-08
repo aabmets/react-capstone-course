@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import { all } from 'itertools';
 import { Fragment } from 'react';
 import { AxiosResponse } from "axios";
 import { useTranslation } from 'next-i18next';
@@ -18,14 +17,14 @@ interface ServerResponse extends AxiosResponse {
 	data: {
 		message: string;
 		username: string;
-		password: string;
+		exception: object;
 	}
 }
 
 function InputStage(): JSX.Element {
-	const data = ctx.useDatastoreContext();
+	const { form, modal, datastore } = ctx.useDatastoreContext();
+	const { email, password, terms } = ctx.useDatastoreContext();
 	const { t } = useTranslation('auth');
-	const { form, modal } = data;
 	const { auth } = siteConfig;
 
 	const validateForm = hooks.useFormValidator();
@@ -36,25 +35,21 @@ function InputStage(): JSX.Element {
 
 			setTimeout(() => {
 				const request = {
-					url: '/api/create-user',
+					url: '/api/auth/create-account',
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					timeout: auth.formSubmitTimeoutMsec,
 					data: { 
-						email: data.email.value, 
-						password: data.password.value, 
-						terms: data.terms.value,
+						email: email.value, 
+						password: password.value, 
+						terms: terms.value,
 					},
 				}
 				axios(request)
 					.then((res: ServerResponse) => {
 						if (res.status === 200) {
-							const conditions = all([
-								res.data.message === 'OK',
-								res.data.username === data.email.value,
-								res.data.password === data.password.value,
-							]);
-							if (conditions) {
+							const { message, username } = res.data;
+							if (message === 'OK' && username === email.value) {
 								form.setSuccess();
 							} else {
 								form.setFailed();
@@ -68,6 +63,11 @@ function InputStage(): JSX.Element {
 			}, auth.formSubmitDelayMsec);
 		}
 	}
+
+	function closeAndReset() {
+		modal.close();
+		datastore.reset();
+	}
 	
 	return (
 		<Fragment>
@@ -79,7 +79,7 @@ function InputStage(): JSX.Element {
 				<TermsField/>
 			</Box>
 			<Group position='apart'>
-				<BorderedButton disabled={modal.isBusy()} onClick={modal.close}>
+				<BorderedButton disabled={modal.isBusy()} onClick={closeAndReset}>
 					{t("auth.button.back")}
 				</BorderedButton>
 				<RedButton disabled={modal.isBusy()} onClick={submitHandler}>

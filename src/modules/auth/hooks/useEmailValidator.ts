@@ -55,7 +55,8 @@ export function useEmailValidator(): Validator {
 				} else {
 					setStatus(EmailStatus.WAITING);
 				}
-			} else if (email.isError()) {
+			}
+			if (email.isError()) {
 				email.clearError();
 			}
 		} 
@@ -70,15 +71,15 @@ export function useEmailValidator(): Validator {
 
 
 	useEffect(() => {
-		const conditions = all([
+		const allConditions = all([
 			EmailValidator.validate(email.value),
 			network.isLatencyGood(),
 			!email.isError(),
 		]);
 
-		if (conditions) {
+		if (allConditions) {
 			const request = {
-				url: '/api/check-email',
+				url: '/api/auth/check-email',
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				timeout: auth.maxLatencyMsec,

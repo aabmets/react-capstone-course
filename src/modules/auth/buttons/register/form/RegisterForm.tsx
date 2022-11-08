@@ -4,8 +4,9 @@ import { LoadingOverlay } from '@mantine/core';
 import { Modal } from '@mantine/core';
 import * as ctx from '@auth/context';
 import * as props from '@auth/props';
-import SuccessStage from './stages/SuccessStage';
-import InputStage from './stages/InputStage';
+import SuccessStage from '../stages/SuccessStage';
+import FailedStage from '../stages/FailedStage';
+import InputStage from '../stages/InputStage';
 import useHeader from './RegisterForm.header';
 import { useModalStyles } from './RegisterForm.styles';
 
@@ -32,7 +33,7 @@ export function RegisterForm(): JSX.Element {
 			<LoadingOverlay {...overlayProps} visible={modal.isBusy()}/>
 			{form.isInput() && <InputStage />} 
 			{form.isSuccess() && <SuccessStage />}
-			{form.isFailed() && <div>FAILED</div>}
+			{form.isFailed() && <FailedStage />}
 		</Modal>
 	);
 }

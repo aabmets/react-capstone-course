@@ -1,5 +1,5 @@
 import React from 'react';
-import { Fragment, ChangeEvent } from 'react';
+import { Fragment } from 'react';
 import { useTranslation } from 'next-i18next';
 import { PasswordInput, Text } from '@mantine/core';
 import { Button, UnstyledButton } from '@mantine/core';

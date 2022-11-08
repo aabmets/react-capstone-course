@@ -1,10 +1,11 @@
 import React from 'react';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { UnstyledButton } from '@mantine/core';
-import { Menu, Image, Group, MenuProps } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons';
+import { Menu, Group, MenuProps } from '@mantine/core';
+import { UnstyledButton } from '@mantine/core';
 import { cookies } from '@utils';
 import useStyles from './LanguageSelector.styles';
 
@@ -45,11 +46,11 @@ function LanguageSelector() {
 	));
 
 	const menuProps = {
-		opened,
 		onOpen: () => setOpened(true), 
 		onClose: () => setOpened(false), 
 		trigger: 'hover',
 		width: "target",
+		opened,
 	} as MenuProps;
 
 	return (

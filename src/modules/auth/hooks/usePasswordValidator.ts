@@ -47,15 +47,15 @@ export function usePasswordValidator(): Validator {
 
 
 	useEffect(() => {
-		const conditions = all([
+		const allConditions = all([
 			password.value !== '',
 			network.isLatencyGood(),
 			!password.isError(),
 		]);
 
-		if (conditions) {
+		if (allConditions) {
 			const request = {
-				url: '/api/check-password',
+				url: '/api/auth/check-password',
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				timeout: auth.maxLatencyMsec,

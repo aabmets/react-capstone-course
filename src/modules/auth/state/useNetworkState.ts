@@ -28,7 +28,7 @@ export function useNetworkState(): NetworkState {
 		const clientTime = Date.now();
 		const request = {
 			timeout: auth.maxLatencyMsec,
-			url: '/api/test-network-latency',
+			url: '/api/common/network-latency',
 			method: 'GET',
 		};
 		axios(request)
