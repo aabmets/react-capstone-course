@@ -1,14 +1,17 @@
+import React from 'react';
+import { AppProps } from 'next/app';
 import { Fragment, useState } from 'react';
 import { appWithTranslation } from 'next-i18next';
-import { MantineThemeOverride } from '@mantine/core';
-import { ColorSchemeProvider } from '@mantine/core'; 
-import { MantineProvider } from '@mantine/core';
-import { ColorScheme } from '@mantine/core';
-import { AppProps } from 'next/app';
+import { MantineProvider, ColorSchemeProvider } from '@mantine/core';
+import { ColorScheme, MantineThemeOverride } from '@mantine/core'; 
+import { NotificationsProvider } from '@mantine/notifications';
+import { RouterTransition } from '@components';
+import { AppwriteProvider } from '@context';
+import { AppScaffold } from '@app-scaffold';
+import { AllHeadTags } from '@head-tags';
+import { cookies } from '@utils';
 import siteConfig from 'site.config';
-import HeadTags from '@features/HeadTags';
-import AppScaffold from 'src/features/AppScaffold/AppScaffold';
-import * as cookies from '@utils/cookies';
+
 
 interface CustomPageProps {
 	scheme: ColorScheme;
@@ -28,12 +31,17 @@ function App({ Component, pageProps }: AppProps): JSX.Element {
 
 	return (
 		<Fragment>
-			<HeadTags />
+			<AllHeadTags />
 			<ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggle}>
 				<MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
-					<AppScaffold>
-						<Component {...pageProps}/>
-					</AppScaffold>
+					<RouterTransition />
+					<AppwriteProvider>
+						<NotificationsProvider>
+							<AppScaffold>
+								<Component {...pageProps}/>
+							</AppScaffold>
+						</NotificationsProvider>
+					</AppwriteProvider>
 				</MantineProvider>
 			</ColorSchemeProvider>
 		</Fragment>

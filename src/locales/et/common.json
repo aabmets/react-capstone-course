@@ -1,3 +1,5 @@
 {
-	"debug.translations.locale": "DEBUG LOCALE: ET"
+	"header.button.mainpage": "Esileht",
+	"header.button.account": "Konto",
+	"header.button.settings": "Sätted"
 }
