@@ -15,14 +15,14 @@ import PasswordField from '../inputs/PasswordField';
 import siteConfig from 'site.config';
 
 
-const lsKey = siteConfig.auth.localStorage.currentUser;
-
-export function LoginForm() {
-	const { t } = useTranslation('auth');
+export function LoginForm(): JSX.Element {
+	const { currentUser } = siteConfig.auth.localStorage;
 	const { email, password, form } = useAuthDatastoreContext();
-	const [user, setUser] = useLocalStorage(lsKey, '');
+	const [user, setUser] = useLocalStorage(currentUser, '');
 	const { classes } = useStyles({ email, password });
 	const { account } = useAppwriteContext();
+	const { t } = useTranslation('auth');
+	
 	const notifications = hooks.useNotifications();
 
 	function validateForm(): boolean {
@@ -31,7 +31,6 @@ export function LoginForm() {
 			email.setError(t('auth.input-field.error.empty'));
 			isValid = false;
 		} else if (!EmailValidator.validate(email.value)) {
-			console.log("wtf is this inpuyt")
 			const message = t('auth.button.login.failed.bad-creds');
 			password.setError(message);
 			email.setError(message);

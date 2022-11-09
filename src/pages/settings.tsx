@@ -9,7 +9,7 @@ import { LanguageSelector } from '@components';
 
 function SettingsPage() {
 	return (
-		<Group position='center' spacing='xl' sx={{position: 'relative', height: '30%'}}>
+		<Group position='center' spacing='xl' sx={{position: 'relative', height: '40%'}}>
 			<ColorSchemeToggle />
 			<LanguageSelector />
 		</Group>

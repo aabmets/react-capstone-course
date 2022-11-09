@@ -8,7 +8,7 @@ import { theme } from '@utils';
 
 type Event = React.ChangeEvent<HTMLInputElement>;
 
-function PasswordField() {
+function PasswordField(): JSX.Element {
 	const { email, password } = useAuthDatastoreContext();
 	const { t } = useTranslation('auth');
 

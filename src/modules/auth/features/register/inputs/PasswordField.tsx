@@ -9,7 +9,7 @@ import * as hooks from '@auth/hooks';
 import useStyles from './PasswordField.styles';
 
 
-export function PasswordField(): JSX.Element {
+function PasswordField(): JSX.Element {
 	const { password } = useAuthDatastoreContext();
 	const { classes } = useStyles({ password });
 	const { t } = useTranslation('auth');

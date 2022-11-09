@@ -1,5 +1,6 @@
 import React from 'react';
 import { Fragment } from 'react';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useLocalStorage } from 'usehooks-ts';
 import { useMantineColorScheme } from '@mantine/core';
@@ -17,11 +18,15 @@ export function LogoutButton(): JSX.Element {
 	const { colorScheme } = useMantineColorScheme();
 	const { account } = useAppwriteContext();
 	const { t } = useTranslation('auth');
+	const router = useRouter();
 
 	const color = colorScheme === 'light' ? 'forestgreen' : 'limegreen';
 
 	function handler() {
 		setUser('');
+		if (router.pathname === '/account') {
+			router.push('/');
+		}
 		showNotification({
 			message: t('auth.button.logout.message'),
 			icon: <IconLogout size={30} color={color} />,
