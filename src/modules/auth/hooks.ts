@@ -1,10 +1,12 @@
 import { useEmailValidator } from "./hooks/useEmailValidator";
-import { usePasswordValidator } from "./hooks/usePasswordValidator";
 import { useFormValidator } from "./hooks/useFormValidator";
+import { useNotifications } from "./hooks/useNotifications";
+import { usePasswordValidator } from "./hooks/usePasswordValidator";
 
 export { useEmailValidator };
-export { usePasswordValidator };
 export { useFormValidator };
+export { useNotifications };
+export { usePasswordValidator };
 
 import { EmailStatus } from "./hooks/useEmailValidator";
 export { EmailStatus };

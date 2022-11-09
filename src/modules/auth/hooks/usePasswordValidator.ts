@@ -6,7 +6,8 @@ import { all } from 'itertools';
 import { AxiosResponse } from 'axios';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
-import { useDatastoreContext } from '@auth/context';
+import { useDebouncedState } from '@mantine/hooks';
+import { useAuthDatastoreContext } from '@auth/context';
 import { PasswordScore } from '@auth/state';
 import siteConfig from 'site.config';
 
@@ -23,21 +24,25 @@ interface Validator {
 }
 
 export function usePasswordValidator(): Validator {
-	const { email, password, network } = useDatastoreContext();
+	const { maxPasswordLength, minPasswordLength} = siteConfig.auth;
+	const { inputDebounceMsec, maxLatencyMsec} = siteConfig.auth;
+
+	const { email, password, network } = useAuthDatastoreContext();
+	const [request, setRequest] = useDebouncedState(0, inputDebounceMsec);
 	const [token, setToken] = useState(0);
 	const { t } = useTranslation('auth');
-	const { auth } = siteConfig;
 
 	function validate(value: string): void {
-		const maxLen = auth.maxPasswordLength;
-		if (value.length > maxLen) {
-			const msg = t('auth.password-input.error.too-long');
-			password.setError(msg.replace('$', String(maxLen)));
+		if (value.length > maxPasswordLength) {
+			const message = t('auth.password-input.error.too-long');
+			password.setError(message.replace('$', String(maxPasswordLength)));
 		} else if (password.isError()) {
 			password.clearError();
 		} 
 		password.setValue(value);
+		setRequest(Math.random());
 	}
+
 
 	useEffect(() => {
 		if (network.isLatencyBad()) {
@@ -47,18 +52,29 @@ export function usePasswordValidator(): Validator {
 
 
 	useEffect(() => {
-		const allConditions = all([
+		const allConditions1 = all([
+			password.value !== '',
+			password.value.length < minPasswordLength,
+		])
+
+		if (allConditions1) {
+			password.setScore(PasswordScore.LEVEL0);
+			setToken(Math.random());
+			return;
+		}
+
+		const allConditions2 = all([
 			password.value !== '',
 			network.isLatencyGood(),
 			!password.isError(),
 		]);
 
-		if (allConditions) {
+		if (allConditions2) {
 			const request = {
 				url: '/api/auth/check-password',
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				timeout: auth.maxLatencyMsec,
+				timeout: maxLatencyMsec,
 				data: {
 					password: password.value,
 					email: email.value,
@@ -79,7 +95,7 @@ export function usePasswordValidator(): Validator {
 		} else if (network.isLatencyGood()) {
 			password.setScore(PasswordScore.EMPTY);
 		}
-	}, [password.value]);
+	}, [request]);
 
 	return { token, validate };
 }

@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useDebouncedState } from '@mantine/hooks';
-import siteConfig from 'site.config';
 
 
 type Setter<T> = React.Dispatch<React.SetStateAction<T>> | ((newValue: T) => void);
@@ -29,9 +27,8 @@ export enum PasswordScore {
 }
 
 export function usePasswordState(): PasswordState {
-	const debounce = siteConfig.auth.passwordDebounceMsec;
-	const [value, setValue] = useDebouncedState('', debounce);
 	const [score, setScore] = useState(PasswordScore.EMPTY);
+	const [value, setValue] = useState('');
 	const [error, setError] = useState('');
 
 	return {

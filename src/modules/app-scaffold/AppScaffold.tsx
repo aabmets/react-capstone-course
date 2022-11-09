@@ -1,9 +1,7 @@
 import React from 'react';
 import { AppShell }  from '@mantine/core';
-import Navbar from './Navbar';
-import Header from './Header';
-import Footer from './Footer';
-import Aside from './Aside';
+import Header from './components/AppHeader';
+import Footer from './components/AppFooter';
 
 
 interface Page {
@@ -12,11 +10,10 @@ interface Page {
 
 function AppScaffold({ children }: Page): JSX.Element {
 	return (
-		<AppShell
-			navbar={<Navbar />}
-			header={<Header />}
-			footer={<Footer />}
-			aside={<Aside />} >
+		<AppShell 
+			sx={{'.mantine-AppShell-main': {paddingTop: '15px'}}}
+			header={<Header />} 
+			footer={<Footer />}>
 				{children}
 		</AppShell>
 	);

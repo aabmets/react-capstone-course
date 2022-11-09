@@ -1,7 +1,7 @@
-import { DatastoreContext } from './context/Datastore';
-import { DatastoreProvider } from './context/Datastore';
-import { useDatastoreContext } from './context/Datastore';
+import { AuthDatastoreContext } from './context/AuthDatastore';
+import { AuthDatastoreProvider } from './context/AuthDatastore';
+import { useAuthDatastoreContext } from './context/AuthDatastore';
 
-export { DatastoreContext };
-export { DatastoreProvider };
-export { useDatastoreContext };
+export { AuthDatastoreContext };
+export { AuthDatastoreProvider };
+export { useAuthDatastoreContext };

@@ -5,10 +5,9 @@ import siteConfig from 'site.config';
 
 
 interface ServerResponse extends AxiosResponse {
-	data: {
-		serverTime: number;
-	}
+	data: { serverTime: number };
 }
+
 export interface NetworkState {
 	readonly isLatencyGood: () => boolean;
 	readonly isLatencyBad: () => boolean;

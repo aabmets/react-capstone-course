@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useDebouncedState } from '@mantine/hooks';
-import siteConfig from 'site.config';
 
 
 type Setter<T> = React.Dispatch<React.SetStateAction<T>> | ((newValue: T) => void);
@@ -17,8 +15,7 @@ export interface EmailState {
 }
 
 export function useEmailState(): EmailState {
-	const debounce = siteConfig.auth.emailDebounceMsec;
-	const [value, setValue] = useDebouncedState('', debounce);
+	const [value, setValue] = useState('');
 	const [error, setError] = useState('');
 	
 	return {

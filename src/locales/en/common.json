@@ -1,3 +1,5 @@
 {
-	"debug.translations.locale": "DEBUG LOCALE: EN"
+	"header.button.mainpage": "Main Page",
+	"header.button.account": "Account",
+	"header.button.settings": "Settings"
 }

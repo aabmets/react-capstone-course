@@ -5,6 +5,7 @@ import { getEmailAvailability } from '@auth/server';
 import { getPasswordScore } from '@auth/server';
 import { PasswordScore } from '@auth/state';
 import appwriteConfig from 'appwrite.config';
+import siteConfig from 'site.config';
 
 
 const client = new sdk.Client();
@@ -35,11 +36,19 @@ async function createAccount(req: ExtendedRequest, res: NextApiResponse): Promis
 		return;
 	}
 
+	const { maxEmailLength} = siteConfig.auth;
+	const { maxPasswordLength, minPasswordLength } = siteConfig.auth;
 	const { email, password, terms } = req.body;
 
 	let isInvalid = false;
 
 	if (!email || !password || !terms) {
+		isInvalid = true;
+	} else if (email.length > maxEmailLength) {
+		isInvalid = true;
+	} else if (password.length > maxPasswordLength) {
+		isInvalid = true;
+	} else if (password.length < minPasswordLength) {
 		isInvalid = true;
 	} else if (!EmailValidator.validate(email)) {
 		isInvalid = true;

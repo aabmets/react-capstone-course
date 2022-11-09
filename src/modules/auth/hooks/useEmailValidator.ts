@@ -4,9 +4,10 @@
 import axios from 'axios';
 import { all } from 'itertools';
 import { AxiosResponse } from 'axios';
-import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { useDatastoreContext } from '@auth/context';
+import { useTranslation } from 'next-i18next';
+import { useDebouncedState } from '@mantine/hooks';
+import { useAuthDatastoreContext } from '@auth/context';
 import * as EmailValidator from 'email-validator';
 import siteConfig from 'site.config';
 
@@ -31,16 +32,18 @@ export enum EmailStatus {
 }
 
 export function useEmailValidator(): Validator {
-	const { email, network } = useDatastoreContext();
+	const { maxEmailLength, maxLatencyMsec } = siteConfig.auth;
+	const { inputDebounceMsec } = siteConfig.auth;
+
+	const { email, network } = useAuthDatastoreContext();
+	const [request, setRequest] = useDebouncedState(0, inputDebounceMsec);
 	const [status, setStatus] = useState(EmailStatus.WAITING);
 	const { t } = useTranslation('auth');
-	const { auth } = siteConfig;
 
 	function validate(value: string): void {
-		const maxLen = auth.maxEmailLength;
-		if (value.length > maxLen) {
-			const msg = t('auth.email-input.error.too-long');
-			email.setError(msg.replace('$', String(maxLen)));
+		if (value.length > maxEmailLength) {
+			const message = t('auth.email-input.error.too-long');
+			email.setError(message.replace('$', String(maxEmailLength)));
 			if (network.isLatencyGood()) {
 				setStatus(EmailStatus.WAITING);
 			}
@@ -49,6 +52,7 @@ export function useEmailValidator(): Validator {
 				if (EmailValidator.validate(value)) {
 					if (network.isLatencyGood()) {
 						setStatus(EmailStatus.PENDING);
+						setRequest(Math.random());
 					} else {
 						setStatus(EmailStatus.NONE);
 					}
@@ -63,6 +67,7 @@ export function useEmailValidator(): Validator {
 		email.setValue(value);
 	}
 
+	
 	useEffect(() => {
 		if (network.isLatencyBad()) {
 			setStatus(EmailStatus.NONE);
@@ -82,7 +87,7 @@ export function useEmailValidator(): Validator {
 				url: '/api/auth/check-email',
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				timeout: auth.maxLatencyMsec,
+				timeout: maxLatencyMsec,
 				data: { email: email.value },
 			}
 			axios(request)
@@ -103,7 +108,7 @@ export function useEmailValidator(): Validator {
 					setStatus(EmailStatus.NONE);
 				});
 		} 
-	}, [email.value]);
+	}, [request]);
 
 	return { status, validate };
 }
